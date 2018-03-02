@@ -1,0 +1,14 @@
+#define RELEASE "@RELEASE@"
+#define VERSION "@VERSION@"
+#define RELEASE_VERSION "@RELEASE_VERSION@"
+namespace MpkPen
+{
+    namespace Define
+    {
+	char const* version(){ return VERSION; }
+	char const* release(){ return RELEASE; }
+	char const* release_version(){ return RELEASE_VERSION; }
+
+    }
+
+}
