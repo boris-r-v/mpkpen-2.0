@@ -2,7 +2,7 @@
 #include <version.h>
 #include <iostream>
 
-void MpkPen::Client::get()
+void MpkPen::Public::Client::get()
 {
     std::cout <<"MpkPen::Client version:" << MpkPen::Define::version() << std::endl;
 }

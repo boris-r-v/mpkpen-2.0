@@ -25,10 +25,15 @@ include_directories(${PROJECT_BINARY_DIR})
 set(ARM_RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen_arm.cpp)
 set(KTS_RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen_kts.cpp)
 
+# add private library
+add_subdirectory(private_library)
+include_directories ("${PROJECT_SOURCE_DIR}/private_library/src")
+set(EXTRA_LIBS ${EXTRA_LIBS} shared_private)
+
 # add public library
 add_subdirectory(public_library)
-include_directories ("${PROJECT_SOURCE_DIR}/public_library")
-set(EXTRA_LIBS ${EXTRA_LIBS} shared)
+include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
+set(EXTRA_LIBS ${EXTRA_LIBS} shared_public)
 
 # add target
 add_executable(${PROJECT_NAME}-arm ${ARM_RUNNER_SRC})

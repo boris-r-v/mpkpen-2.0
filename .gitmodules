@@ -1,0 +1,3 @@
+[submodule "private_library"]
+	path = private_library
+	url = https://boris_r_v@bitbucket.org/boris_r_v/mpkpen_private.git
