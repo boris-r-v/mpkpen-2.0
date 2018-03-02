@@ -6,6 +6,8 @@ include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
 
 # add open-library
 add_library(shared_public SHARED ${PUBLIC_LIB_SOURSEC} )
+target_link_libraries(shared_public shared_private )
+
 # set property    
 set_target_properties(shared_public PROPERTIES
 			OUTPUT_NAME			${PROJECT_NAME}_public-${RELEASE_SERIES}
