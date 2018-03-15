@@ -1,3 +1,6 @@
+#ifndef MPKPEN_VERSION
+#define MPKPEN_VERSION
+
 #define RELEASE "@RELEASE@"
 #define VERSION "@VERSION@"
 #define RELEASE_VERSION "@RELEASE_VERSION@"
@@ -5,10 +8,11 @@ namespace MpkPen
 {
     namespace Define
     {
-	char const* version(){ return VERSION; }
-	char const* release(){ return RELEASE; }
-	char const* release_version(){ return RELEASE_VERSION; }
-
+	char const* version = VERSION;
+	char const* release = RELEASE;
+	char const* version_release = RELEASE_VERSION;
     }
 
 }
+
+#endif // MPKPEN_VERSION

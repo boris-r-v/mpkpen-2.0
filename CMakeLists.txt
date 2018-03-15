@@ -22,8 +22,7 @@ configure_file(
 include_directories(${PROJECT_BINARY_DIR})
 
 # add runner src file
-set(ARM_RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen_arm.cpp)
-set(KTS_RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen_kts.cpp)
+set(RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen.cpp)
 
 # add private library
 add_subdirectory(private_library)
@@ -37,10 +36,8 @@ include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
 include_directories ("${PROJECT_SOURCE_DIR}/private_library/src")
 
 # add target
-add_executable(${PROJECT_NAME}-arm ${ARM_RUNNER_SRC})
-target_link_libraries(${PROJECT_NAME}-arm ${EXTRA_LIBS} )
+add_executable(${PROJECT_NAME} ${RUNNER_SRC})
+target_link_libraries(${PROJECT_NAME} ${EXTRA_LIBS} )
 
-add_executable(${PROJECT_NAME}-kts ${KTS_RUNNER_SRC})
-target_link_libraries(${PROJECT_NAME}-kts ${EXTRA_LIBS} )
 
 
