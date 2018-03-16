@@ -1,6 +1,8 @@
 #include <main.h>
+
 #include <version.h>
 #include <iostream>
+#include <client.h>
 
 namespace mp = MpkPen::Public;
 namespace po = boost::program_options;

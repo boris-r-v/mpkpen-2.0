@@ -11,7 +11,8 @@ namespace MpkPen
 		Client()=default;
 		~Client()=default;
 
-	        void get();
+
+	        void protobuf();
 	};
     }
 }
