@@ -1,0 +1,14 @@
+/**
+* Область видимости
+*/
+package MpkPen.Public;		
+
+/**
+* Пакет пересылаемый по сети
+*/
+message Message
+{
+    required string id = 1;		//идентификатор сообщения ["Order","Ticket"]
+    required bytes data = 2;		//сообщение
+}
+

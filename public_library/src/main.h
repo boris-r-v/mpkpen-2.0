@@ -14,10 +14,10 @@ namespace MpkPen
     {
 	class Main
 	{
+		void prepare_for_run();
 		void run_arm_side( boost::program_options::variables_map const& );
 		void run_ktsuk_side( boost::program_options::variables_map const& );
 	        boost::program_options::options_description desc;
-
 	    public:		
 		Main();
 		~Main()=default;

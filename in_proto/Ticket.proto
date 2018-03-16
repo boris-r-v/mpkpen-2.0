@@ -8,24 +8,18 @@
 package MpkPen.Public;		
 
 /**
-* Структура данных с приказом телеуправления
-*/
-message Order
-{
-    required uint32 order_number = 1;	//идентификатор приказа
-    required bytes order_data = 2;	//содержимое приказа
-}
-
-/**
 * Структура данных с квитком приказа приказом 
 */
 message Ticket
 {
-    required uint32 order_number = 1;	//идентификатор приказа
+    required uint32 order_number = 1;				//идентификатор приказа
     enum TicketType
     {
 	ONCE = 0;		//Получена команда впервые
 	TWICE = 1;		//Получена повторно - для мониторинга потери квитков
     }
-    required TicketType order_ticket = 2;	//тип квитанции
+    required TicketType order_ticket = 2;			//тип квитанции
+
+    optional string message_type = 3 [default="Ticket"];	//идентификатор сообщения
+
 }

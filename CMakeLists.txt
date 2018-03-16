@@ -2,7 +2,7 @@ project(mpkpen)
 cmake_minimum_required(VERSION 3.5)
 
 # set compile time options 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
 
 # set current version of project
 set(VERSION_MAJOR 0)

@@ -1,0 +1,19 @@
+/**
+* Описание данных передаваемых по сети
+*/
+
+/**
+* Укажем областьвидимости
+*/
+package MpkPen.Public;		
+
+/**
+* Структура данных с приказом телеуправления
+*/
+message Order
+{
+    required uint32 order_number = 1;				//идентификатор приказа
+    required bytes order_data = 2;				//содержимое приказа
+
+    optional string message_type = 3 [default="Order"];		//идентификатор сообщения
+}

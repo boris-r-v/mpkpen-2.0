@@ -1,8 +1,10 @@
 #include <main.h>
-
 #include <version.h>
 #include <iostream>
+#include <message_dispatcher.h>
+
 #include <client.h>
+
 
 namespace mp = MpkPen::Public;
 namespace po = boost::program_options;
@@ -78,6 +80,7 @@ void mp::Main::run(int argc, char** argv)
 void mp::Main::run_arm_side( po::variables_map const& vm )
 {
     std::cout << "run arm side " << std::endl;
+    prepare_for_run();
 }
 
 void mp::Main::run_ktsuk_side(  po::variables_map const& _vm )
@@ -94,3 +97,26 @@ void mp::Main::run_ktsuk_side(  po::variables_map const& _vm )
 	std::cout << desc << std::endl; 
     }
 }
+
+#include <Order.pb.h>
+#include <Ticket.pb.h>
+void mp::Main::prepare_for_run()
+{
+    mp::MessageDispatcher md ( mp::create_message_dispatcher() );
+
+
+    MpkPen::Public::Order ord;
+    ord.set_order_number( 98745 );
+    ord.set_order_data( "asvfrcqw#@%^&^dfhjs" );
+
+    MpkPen::Public::Message msg_out ( mp::pack_message( ord ) );
+
+
+    mp::Ticket tic ( mp::unpack_message<mp::Ticket>( md.dispatch ( msg_out ) ) );
+
+    std::cout << "order number " << ord.order_number()<< std::endl;
+    std::cout << "ticket number " << tic.order_number()<< std::endl;
+
+}
+
+
