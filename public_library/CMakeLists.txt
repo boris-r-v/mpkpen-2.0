@@ -1,6 +1,6 @@
 
 # need library
-find_package(Boost REQUIRED COMPONENTS program_options )
+find_package(Boost REQUIRED COMPONENTS program_options system)
 find_package(Protobuf REQUIRED)
 
 # add lib source files
@@ -18,7 +18,8 @@ set(ProtobufProtoSources
 )
 PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${ProtobufProtoSources} )
 
-
+# add include dir for the exutables
+include_directories ("${PROJECT_SOURCE_DIR}/private_library/src")
 
 # add open-library
 add_library(shared_public SHARED ${PUBLIC_LIB_SOURSEC} ${PROTO_SRCS} ${PROTO_HDRS} )

@@ -1,0 +1,35 @@
+#ifndef COMMON_UDP_CLIENT_H
+#define COMMON_UDP_CLIENT_H
+
+#include <boost/asio.hpp>
+
+namespace MpkPen
+{
+    namespace Public
+    {
+    	class UdpClient
+	{
+	    public:
+		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg );	
+		void send( std::string const& );
+
+		void send_once( std::string const& );
+
+		bool delivered() const;
+		void delivered( bool );
+	    
+	    private:
+	        boost::asio::ip::udp::endpoint endpoint_;
+		boost::asio::ip::udp::socket socket_;
+		boost::asio::deadline_timer timer_;
+		bool done_;
+		std::string message_;
+		int attempt_;
+
+		void handle_send_to(const boost::system::error_code& error);
+		void handle_timeout(const boost::system::error_code& error);
+	};
+    }
+}
+#endif //COMMON_UDP_SERVER_H
+

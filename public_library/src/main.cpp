@@ -1,14 +1,14 @@
 #include <main.h>
 #include <version.h>
-#include <iostream>
 #include <message_dispatcher.h>
-
-#include <client.h>
+#include <side_arm.h>
+#include <side_kts.h>
+#include <iostream>
 
 
 namespace mp = MpkPen::Public;
 namespace po = boost::program_options;
-
+static const int  max_treads = 4;
 
 mp::Main::Main():
     desc("Allowed options")
@@ -25,6 +25,10 @@ void mp::Main::run(int argc, char** argv)
     ("arm,a", "run program as arm-side ")
     ("version,v", "pring version and exit")
     ("ini", po::value<std::string>(),"set path to ini-file, (use with ktsuk-option)")
+    ("mcast", po::value<std::string>(),"kts multycast group (default: '224.1.1.1')")
+    ("arm_tu_port", po::value<int>(),"The UDP port, witch the ARM sends the tu-command (default: 14310)")
+    ("kts_tu_port", po::value<int>(),"The Multycast port, witch the KTS listen for tu-commands (default: 14350) ")
+    ("service_port", po::value<int>(),"The Multycast service port (default: 18681)")
     ;
 
     po::variables_map vm;
@@ -63,24 +67,21 @@ void mp::Main::run(int argc, char** argv)
 
     if ( vm.count("arm") and !vm.count("ktsuk") )
     {
-	run_arm_side( vm );
+	MpkPen::Public::Arm::Provider arm( vm );
+	arm.run();
 	return;
     }
 
     if ( vm.count("ktsuk") and !vm.count("arm"))
     {
-	run_ktsuk_side( vm );
+	MpkPen::Public::Kts::Provider kts( vm );
+	kts.run();
+	//run_ktsuk_side( vm );
 	return;
     }
 
     std::cout << "Wrong command line options" << std::endl;
     std::cout << desc << std::endl;
-}
-
-void mp::Main::run_arm_side( po::variables_map const& vm )
-{
-    std::cout << "run arm side " << std::endl;
-    prepare_for_run();
 }
 
 void mp::Main::run_ktsuk_side(  po::variables_map const& _vm )
