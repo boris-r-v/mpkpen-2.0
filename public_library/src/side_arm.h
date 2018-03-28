@@ -20,7 +20,7 @@ namespace MpkPen
 		    int arm_port_, kts_port_, service_port_;
 		    UdpServer udp_server_;
 		    UdpServer service_server_;
-		    MpkPen::Public::MessageDispatcher md_;
+		    MpkPen::Public::MessageDispatcher message_dispatcher_;
 		    UdpClientManager client_manager_;
 
 		    void udp_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает команду ТУ для отправки по сервисному протоколу

@@ -31,3 +31,13 @@ mp::MessageDispatcher mp::create_message_dispatcher()
 
     return md;
 }
+
+mp::Message mp::MessageDispatcher::create_tu_message( std::string& const _arm_tu )
+{
+    MpkPen::Public::Order ord;
+    ord.set_order_number( mImpl_[mp::Order::default_instance().message_type()].get_next_tu_id() );
+    ord.set_order_data( _arm_tu );
+    
+    return MpkPen::Public::pack_message( ord );
+
+}

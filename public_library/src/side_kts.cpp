@@ -36,11 +36,11 @@ std::cout << "void MpkPen::Public::Kts::Provider::service_callback" << std::endl
 	MpkPen::Public::Logger::instance() << "Error while parse message" << std::endl; 	
     try
     {
+	
 	MpkPen::Public::Message kts_ticket = md_.dispatch ( msg_in );
 	kts_ticket.SerializeToString( &_kts_ticket );
+
 	MpkPen::Public::Order arm_order ( MpkPen::Public::unpack_message<MpkPen::Public::Order>( msg_in  ) );
-std::cout << "----------------------" << std::endl;
-std::cout << arm_order.order_data() << std::endl;    
 
 	auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, arm_order.order_data(), client_manager_ );
 	cmd->delivered( true );

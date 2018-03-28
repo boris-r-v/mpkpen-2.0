@@ -15,7 +15,8 @@ namespace MpkPen
 		void addProcessor( MpkPen::Public::MessageProcessorBasePtr processor);
 		
 		MpkPen::Public::Message dispatch( MpkPen::Public::Message const& query );
-	
+
+		MpkPen::Public::Message create_tu_message( std::string& const );
 
 	    private:
 		typedef std::map <std::string, MpkPen::Public::MessageProcessorBasePtr > DispatcherImplType;

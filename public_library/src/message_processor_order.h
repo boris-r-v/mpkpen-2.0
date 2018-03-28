@@ -16,6 +16,7 @@ namespace MpkPen
 		~MessageOrderProcessor() = default;
 		virtual std::string id() const;
 
+		size_t get_next_tu_id();
 	    private:
 		virtual MpkPen::Public::Ticket doProcess( MpkPen::Public::Order const& );
 	};
