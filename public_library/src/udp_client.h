@@ -8,19 +8,18 @@ namespace MpkPen
 {
     namespace Public
     {
+	class UdpClientManager;
     	class UdpClient: public std::enable_shared_from_this<UdpClient>
 	{
 	    public:
-		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg );	
-		~UdpClient( );
-		void send( std::string const& );
-
-		void send_once( std::string const& );
+		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg, UdpClientManager& );	
+		virtual ~UdpClient( );
 
 		bool delivered() const;
 		void delivered( bool );
 		bool timeout() const;
-	    
+		void stop();	    
+
 	    private:
 	        boost::asio::ip::udp::endpoint endpoint_;
 		boost::asio::ip::udp::socket socket_;
@@ -29,6 +28,8 @@ namespace MpkPen
 		std::string message_;
 		int attempt_;
     		std::array<uint8_t, 1024> rec_buffer_;
+		UdpClientManager& client_manager_;
+		
 
 		void handle_send_to(const boost::system::error_code& error);
 		void handle_timeout(const boost::system::error_code& error);
