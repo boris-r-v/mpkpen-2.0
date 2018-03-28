@@ -17,6 +17,7 @@ namespace MpkPen
 	{
 	    class Provider
 	    {
+		    bool test_mode;
 		    boost::asio::io_service io_service_;
 		    int kts_port_, service_port_;
 		    std::string mcast_group_;

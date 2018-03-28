@@ -20,14 +20,15 @@ void mp::Main::run(int argc, char** argv)
 {
     desc.add_options()
     ("help,h", "produce help message")
-    ("tutorial,t", "produce short tutorial")
+    //("tutorial,t", "produce short tutorial")
     ("ktsuk,k", "run program as ktsuk-side, (request set ini-option)")
     ("arm,a", "run program as arm-side ")
     ("version,v", "pring version and exit")
+    ("test,t", "test-run, service port for arm and nts are different")
     ("ini", po::value<std::string>(),"set path to ini-file, (use with ktsuk-option)")
     ("mcast", po::value<std::string>(),"kts multycast group (default: '224.1.1.1')")
-    ("arm_tu_port", po::value<int>(),"The UDP port, witch the ARM sends the tu-command (default: 14310)")
-    ("kts_tu_port", po::value<int>(),"The Multycast port, witch the KTS listen for tu-commands (default: 14350) ")
+    ("arm_port", po::value<int>(),"The UDP port, witch the ARM sends the tu-command (default: 14310)")
+    ("kts_port", po::value<int>(),"The Multycast port, witch the KTS listen for tu-commands (default: 14350) ")
     ("service_port", po::value<int>(),"The Multycast service port (default: 18681)")
     ;
 
