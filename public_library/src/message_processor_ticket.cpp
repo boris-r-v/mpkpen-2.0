@@ -2,6 +2,10 @@
 
 namespace mp = MpkPen::Public;
 
+mp::MessageTicketProcessor::MessageTicketProcessor( OrderCounter& _oc ):
+    order_counter_( _oc )
+{
+}
 
 std::string mp::MessageTicketProcessor::id() const
 {

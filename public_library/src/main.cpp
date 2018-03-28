@@ -104,7 +104,7 @@ void mp::Main::run_ktsuk_side(  po::variables_map const& _vm )
 #include <Ticket.pb.h>
 void mp::Main::prepare_for_run()
 {
-    mp::MessageDispatcher md ( mp::create_message_dispatcher() );
+    mp::MessageDispatcher md;
 
 
     MpkPen::Public::Order ord;

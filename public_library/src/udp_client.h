@@ -13,7 +13,7 @@ namespace MpkPen
 	{
 	    public:
 		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg, UdpClientManager& );	
-		virtual ~UdpClient( );
+		virtual ~UdpClient( ) = default;
 
 		bool delivered() const;
 		void delivered( bool );
@@ -33,6 +33,7 @@ namespace MpkPen
 
 		void handle_send_to(const boost::system::error_code& error);
 		void handle_timeout(const boost::system::error_code& error);
+		void read_ticket_from_socket();
 	};
 	typedef std::shared_ptr<UdpClient> UdpClient_ptr;
     }

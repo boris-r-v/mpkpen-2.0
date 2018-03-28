@@ -20,11 +20,12 @@ MpkPen::Public::Kts::Provider::Provider( boost::program_options::variables_map c
     service_port_( _vm.count("service_port") ? _vm["service_port"].as<int>() : (test_mode ? SERVICE_TEST_KTS_PORT : SERVICE_PORT ) ),
     mcast_group_( _vm.count("mcast") ? _vm["mcast"].as<std::string>() : "224.1.1.1" ),
     service_server_( service_port_, [this](std::string const& _s1, std::string& _s2){ this->service_callback( _s1, _s2 ); }, io_service_ ),
-    md_( MpkPen::Public::create_message_dispatcher() ),
-    client_manager_()
+    message_dispatcher_( ),
+    client_manager_( message_dispatcher_)
 
 {
     service_server_.join_to_group( boost::asio::ip::address::from_string( SERVICE_GROUP ) );
+    std::srand(unsigned(std::time(0)));
 }
 
 
@@ -37,14 +38,18 @@ std::cout << "void MpkPen::Public::Kts::Provider::service_callback" << std::endl
     try
     {
 	
-	MpkPen::Public::Message kts_ticket = md_.dispatch ( msg_in );
+	MpkPen::Public::Message kts_ticket = message_dispatcher_.dispatch ( msg_in );
 	kts_ticket.SerializeToString( &_kts_ticket );
 
 	MpkPen::Public::Order arm_order ( MpkPen::Public::unpack_message<MpkPen::Public::Order>( msg_in  ) );
 
-	auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, arm_order.order_data(), client_manager_ );
-	cmd->delivered( true );
-	client_manager_.start( cmd );
+	/*random ticket*/
+	if ( (std::rand() % 100) > 50 )
+	{
+	    auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, arm_order.order_data(), client_manager_ );
+	    cmd->delivered( true );
+	    client_manager_.start( cmd );
+	}
     }
     catch ( std::exception const& _e )
     {

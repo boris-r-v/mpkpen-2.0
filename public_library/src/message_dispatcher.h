@@ -2,6 +2,7 @@
 #define MPKPEN_PUBLIC_MESSAGE_DISPATCHER
 
 #include <message_processor.h>
+#include <order_counter.h>
 #include <iostream>
 namespace MpkPen
 {
@@ -10,20 +11,21 @@ namespace MpkPen
 	class MessageDispatcher
 	{
 	    public:
-		MessageDispatcher() = default;
+		MessageDispatcher();
 
 		void addProcessor( MpkPen::Public::MessageProcessorBasePtr processor);
 		
 		MpkPen::Public::Message dispatch( MpkPen::Public::Message const& query );
-
-		MpkPen::Public::Message create_tu_message( std::string& const );
+		
+		MpkPen::Public::Message create_tu_message( std::string const& );
+    
+		bool check_tu_ticket( std::string const& );
 
 	    private:
 		typedef std::map <std::string, MpkPen::Public::MessageProcessorBasePtr > DispatcherImplType;
 		DispatcherImplType mImpl_;
+		OrderCounter order_counter_;
 	};
-
-	MessageDispatcher create_message_dispatcher();
 
 	template <class T>
 	MpkPen::Public::Message pack_message( T const& _im )

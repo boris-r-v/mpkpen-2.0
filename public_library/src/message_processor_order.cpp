@@ -2,7 +2,10 @@
 
 namespace mp = MpkPen::Public;
 
-static int cntr_ = 0;	//FIX ME - it is not thread safe
+mp::MessageOrderProcessor::MessageOrderProcessor( OrderCounter& _oc ):
+    order_counter_( _oc )
+{
+}
 
 std::string mp::MessageOrderProcessor::id() const
 {
@@ -17,7 +20,3 @@ mp::Ticket mp::MessageOrderProcessor::doProcess( mp::Order const& _order )
     return ret;
 }
 
-size_t mp::MessageOrderProcessor::get_next_tu_id()
-{
-    return ++cntr_;
-}

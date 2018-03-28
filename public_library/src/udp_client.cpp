@@ -1,5 +1,6 @@
 #include <udp_client.h> 
 #include <udp_client_manager.h> 
+#include <message_dispatcher.h>
 #include <boost/bind.hpp> 
 #define MAX_SEND_ATTEMPT 3
 
@@ -17,15 +18,9 @@ MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, i
         socket_.async_send_to( boost::asio::buffer( msg ), endpoint_, boost::bind(&UdpClient::handle_send_to, this, boost::asio::placeholders::error) );
 }
 
-MpkPen::Public::UdpClient::~UdpClient( )
-{
-    std::cout << "MpkPen::Public::UdpClient::~UdpClient( )" << std::endl;
-}
-
-
 void MpkPen::Public::UdpClient::handle_send_to(const boost::system::error_code& error)
 {
-std::cout << "void MpkPen::Public::UdpClient::handle_send_to" << std::endl;
+    std::cout << "void MpkPen::Public::UdpClient::handle_send_to" << std::endl;
     if ( !error && !done_ )
     {
 	timer_.expires_from_now(boost::posix_time::seconds(1));
@@ -39,20 +34,10 @@ std::cout << "void MpkPen::Public::UdpClient::handle_send_to" << std::endl;
 
 void MpkPen::Public::UdpClient::handle_timeout(const boost::system::error_code& error)
 {
-std::cout << "void MpkPen::Public::UdpClient::handle_timeout" << std::endl;
-    boost::asio::ip::udp::endpoint sender_endpoint;
-    boost::system::error_code er;
-    size_t size = socket_.receive_from( boost::asio::buffer(rec_buffer_), sender_endpoint, 0, er );
-    if ( !er and size )
-    {
-	std::string rec;
-	std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
-	std::cout << rec << std::endl;	
-	done_= true;
-    }
-    std::cout << "size_: " << size << " , error: " << error << std::endl;
+    std::cout << "void MpkPen::Public::UdpClient::handle_timeout" << std::endl;
+    read_ticket_from_socket();
     if ( !error && !done_ && --attempt_ )
-    {
+    {	//FIX ME - разбить на разные сообщения в лог
 	socket_.async_send_to( boost::asio::buffer(message_), endpoint_, boost::bind(&UdpClient::handle_send_to, this, boost::asio::placeholders::error));
     }
     else
@@ -61,6 +46,18 @@ std::cout << "void MpkPen::Public::UdpClient::handle_timeout" << std::endl;
     }
 }
 
+void MpkPen::Public::UdpClient::read_ticket_from_socket()
+{
+    boost::asio::ip::udp::endpoint sender_endpoint;
+    boost::system::error_code er;
+    size_t size = socket_.receive_from( boost::asio::buffer(rec_buffer_), sender_endpoint, 0, er );
+    if ( !er and size )
+    {
+	std::string rec;
+	std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
+	done_= client_manager_.message_dispatcher().check_tu_ticket( rec );
+    }
+}
 
 void MpkPen::Public::UdpClient::stop()
 {

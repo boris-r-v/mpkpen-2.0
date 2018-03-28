@@ -2,6 +2,7 @@
 #define MPKPEN_PUBLIC_MESSAGE_ORDER
 
 #include <message_processor.h>
+#include <order_counter.h>
 #include <Order.pb.h>
 #include <Ticket.pb.h>
 
@@ -12,13 +13,15 @@ namespace MpkPen
 	class MessageOrderProcessor: public MessageProcessorBase <MpkPen::Public::Order, MpkPen::Public::Ticket>
 	{
 	    public:		
-		MessageOrderProcessor() = default;
+		MessageOrderProcessor() = delete;
 		~MessageOrderProcessor() = default;
+		MessageOrderProcessor( OrderCounter& );
+
 		virtual std::string id() const;
 
-		size_t get_next_tu_id();
 	    private:
 		virtual MpkPen::Public::Ticket doProcess( MpkPen::Public::Order const& );
+		OrderCounter& order_counter_;
 	};
     }
 }

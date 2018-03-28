@@ -20,7 +20,7 @@ namespace MpkPen
 		    int kts_port_, service_port_;
 		    std::string mcast_group_;
 		    UdpServer service_server_;
-		    MpkPen::Public::MessageDispatcher md_;
+		    MpkPen::Public::MessageDispatcher message_dispatcher_;
 		    UdpClientManager client_manager_;
 
 		    void service_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает принятые квитанции от КТС УК

@@ -35,7 +35,7 @@ std::cout << "UdpServer start_recieve" << std::endl;
 
 void MpkPen::Public::UdpServer::send( std::string const& _reply )
 {
-std::cout << "void MpkPen::Public::UdpServer::send answer:"  << std::endl;
+//std::cout << "void MpkPen::Public::UdpServer::send answer:"  << std::endl;
     socket_.async_send_to( boost::asio::buffer( _reply ), remote_endpoint_, 
 	[]( boost::system::error_code _ec, size_t _size )
 	{	
