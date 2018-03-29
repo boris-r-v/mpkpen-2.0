@@ -21,21 +21,21 @@ void MpkPen::Public::Number::deleted( bool _b )
 
 
 MpkPen::Public::OrderCounter::OrderCounter():
-    id_ ( 0 ),
+    current_id_ ( 0 ),
     numbers_( MAX_ORDER_IN_LIST )
 {
 }
 
 unsigned MpkPen::Public::OrderCounter::get_next_order_id()
 {
-    std::lock_guard<std::mutex> lock( mutex_ );
-    numbers_.push_back( ++id_ );
-    return id_;
+    ++current_id_;
+    unsigned id = current_id_.load();
+    numbers_.push_back( id );
+    return id;
 }
 
 bool MpkPen::Public::OrderCounter::check_order_number( unsigned _id )
 {
-    std::lock_guard<std::mutex> lock( mutex_ );
     auto fnd = std::find_if(numbers_.begin(), numbers_.end(), [&_id](Number const& n){ return _id == n.id(); } );
     if ( fnd != numbers_.end() )
     {

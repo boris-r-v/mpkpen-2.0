@@ -17,8 +17,8 @@ namespace MpkPen
 		
 		MpkPen::Public::Message dispatch( MpkPen::Public::Message const& query );
 		
+		/*Со стороны АРМа*/
 		MpkPen::Public::Message create_tu_message( std::string const& );
-    
 		bool check_tu_ticket( std::string const& );
 
 	    private:

@@ -1,10 +1,10 @@
 #ifndef MPKPEN_PUBLIC_ORDER_COUNTER
 #define MPKPEN_PUBLIC_ORDER_COUNTER
 
-#include <mutex>
+
 #include <time.h>
 #include <boost/circular_buffer.hpp>
-
+#include <atomic>
 namespace MpkPen
 {
     namespace Public
@@ -22,9 +22,8 @@ namespace MpkPen
 	};
 	class OrderCounter
 	{
-		unsigned  id_;
+		std::atomic<unsigned>  current_id_;
 	        boost::circular_buffer<Number>  numbers_;
-		std::mutex mutex_;
 	    public:
 		OrderCounter();
 

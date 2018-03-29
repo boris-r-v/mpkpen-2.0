@@ -43,7 +43,6 @@ namespace MpkPen
 			throw RuntimeError ( "Failed to prepare answer: \""+packed_answer.ShortDebugString()+"\"" );
 		    }
 		    return answer;
-		
 	        }
 	    private:
 		virtual AnswerT doProcess( QueryT const& ) = 0;

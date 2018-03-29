@@ -48,14 +48,21 @@ void MpkPen::Public::UdpClient::handle_timeout(const boost::system::error_code& 
 
 void MpkPen::Public::UdpClient::read_ticket_from_socket()
 {
-    boost::asio::ip::udp::endpoint sender_endpoint;
-    boost::system::error_code er;
-    size_t size = socket_.receive_from( boost::asio::buffer(rec_buffer_), sender_endpoint, 0, er );
-    if ( !er and size )
+    try
     {
-	std::string rec;
-	std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
-	done_= client_manager_.message_dispatcher().check_tu_ticket( rec );
+	boost::asio::ip::udp::endpoint sender_endpoint;
+	boost::system::error_code er;
+	size_t size = socket_.receive_from( boost::asio::buffer(rec_buffer_), sender_endpoint, 0, er );
+	if ( !er and size )
+	{
+    	    std::string rec;
+	    std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
+	    done_= client_manager_.message_dispatcher().check_tu_ticket( rec );
+	}
+    }
+    catch ( std::exception const& _e )
+    {
+	Logger.instance() << "Recieve incorrect data, inplace tu ticket. " << _e.what() << std::endl;
     }
 }
 

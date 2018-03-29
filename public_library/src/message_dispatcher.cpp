@@ -31,12 +31,7 @@ mp::Message mp::MessageDispatcher::dispatch( MpkPen::Public::Message const& quer
 
 mp::Message mp::MessageDispatcher::create_tu_message( std::string const& _arm_tu )
 {
-    MpkPen::Public::Order ord;
-    //ord.set_order_number( std::static_pointer_cast<MessageOrderProcessor>(mImpl_[mp::Order::default_instance().message_type()])->get_next_tu_id() );
-    ord.set_order_number( order_counter_.get_next_order_id() );
-    ord.set_order_data( _arm_tu );
-    
-    return MpkPen::Public::pack_message( ord );
+    return MpkPen::Public::pack_message( std::static_pointer_cast<MessageOrderProcessor>(mImpl_[mp::Order::default_instance().message_type()])->create_order( _arm_tu ) );
 }
 
 bool mp::MessageDispatcher::check_tu_ticket( std::string const& _ticket )
@@ -44,17 +39,16 @@ bool mp::MessageDispatcher::check_tu_ticket( std::string const& _ticket )
     MpkPen::Public::Message msg_in;
     if ( !msg_in.ParseFromString( _ticket ) )
     {
-	MpkPen::Public::Logger::instance() << "Error(check_tu_ticket) while parse ticket message: " << _ticket << std::endl; 	
-	return false;
+	throw RuntimeError ( "Failed parse tu ticket: \""+ msg_in.ShortDebugString()+"\"" );
     }
     try
     {
-	//MpkPen::Public::Message kts_ticket = dispatch ( msg_in );
 	mp::Ticket tic ( mp::unpack_message<mp::Ticket>( msg_in ) );
 	if ( tic.order_ticket ( ) != mp::Ticket::ONCE )
 	    MpkPen::Public::Logger::instance() << "Previous ticket for order: "<< tic.order_number() << ", has being missing"  << std::endl; 	
 
 	return order_counter_.check_order_number( tic.order_number() );
+	return std::static_pointer_cast<MessageOrderProcessor>(mImpl_[mp::Order::default_instance().message_type()])->create_order( _arm_tu )
     }
     catch ( std::exception const& _e )
     {
