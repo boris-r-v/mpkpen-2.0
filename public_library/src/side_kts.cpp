@@ -29,7 +29,7 @@ std::cout << "void MpkPen::Public::Kts::Provider::service_callback" << std::endl
     /*random ticket*/
     if ( (std::rand() % 100) > 50 )
     {
-        _kts_ticket = "rec";
+        _kts_ticket = _arm_order;
     }
 
     auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, _arm_order, client_manager_ );

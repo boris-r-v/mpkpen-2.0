@@ -63,7 +63,7 @@ void MpkPen::Public::UdpClient::read_ticket_from_socket()
     {
         std::string rec;
         std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
-        if ( "rec" == rec ) 
+        if ( rec == message_ ) 
 	{
     	    done_ = true;
             MpkPen::Public::Logger::instance() << "Ok:  Tu: " << MpkPen::Private::print_tu ( message_ ) << "recieved" << std::endl;
