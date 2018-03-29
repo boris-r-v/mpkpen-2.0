@@ -9,7 +9,7 @@ MpkPen::Public::UdpServer::UdpServer( int port, MpkPen::Public::UdpServer::Callb
 
 void MpkPen::Public::UdpServer::receive()
 {
-std::cout << "UdpServer start_recieve" << std::endl;
+//std::cout << "UdpServer start_recieve" << std::endl;
     socket_.async_receive_from( boost::asio::buffer(recv_buffer_), remote_endpoint_, 
 	[this]( boost::system::error_code _ec, size_t _size )
 	{

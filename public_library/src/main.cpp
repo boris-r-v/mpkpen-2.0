@@ -1,6 +1,6 @@
 #include <main.h>
 #include <version.h>
-#include <message_dispatcher.h>
+//#include <message_dispatcher.h>
 #include <side_arm.h>
 #include <side_kts.h>
 #include <iostream>
@@ -100,11 +100,11 @@ void mp::Main::run_ktsuk_side(  po::variables_map const& _vm )
     }
 }
 
-#include <Order.pb.h>
-#include <Ticket.pb.h>
+//#include <Order.pb.h>
+//#include <Ticket.pb.h>
 void mp::Main::prepare_for_run()
 {
-    mp::MessageDispatcher md;
+/*    mp::MessageDispatcher md;
 
 
     MpkPen::Public::Order ord;
@@ -118,7 +118,7 @@ void mp::Main::prepare_for_run()
 
     std::cout << "order number " << ord.order_number()<< std::endl;
     std::cout << "ticket number " << tic.order_number()<< std::endl;
-
+*/
 }
 
 

@@ -1,11 +1,10 @@
 #ifndef ARM_SIDE_H
 #define ARM_SIDE_H
-#include <boost/program_options.hpp>		//Спрятать в итоговой версии ПО
 #include <boost/asio.hpp>
-#include <message_dispatcher.h>
 #include <udp_server.h>
 #include <udp_client.h>
 #include <udp_client_manager.h>
+#include <boost/program_options.hpp>	
 
 namespace MpkPen
 {
@@ -20,7 +19,6 @@ namespace MpkPen
 		    int arm_port_, kts_port_, service_port_;
 		    UdpServer udp_server_;
 		    UdpServer service_server_;
-		    MpkPen::Public::MessageDispatcher message_dispatcher_;
 		    UdpClientManager client_manager_;
 
 		    void udp_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает команду ТУ для отправки по сервисному протоколу

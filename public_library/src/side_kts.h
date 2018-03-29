@@ -2,7 +2,6 @@
 #define KTS_SIDE_H
 #include <boost/program_options.hpp>		//Спрятать в итоговой версии ПО
 #include <boost/asio.hpp>
-#include <message_dispatcher.h>
 #include <udp_server.h>
 #include <udp_client.h>
 #include <udp_client_manager.h>
@@ -20,7 +19,6 @@ namespace MpkPen
 		    int kts_port_, service_port_;
 		    std::string mcast_group_;
 		    UdpServer service_server_;
-		    MpkPen::Public::MessageDispatcher message_dispatcher_;
 		    UdpClientManager client_manager_;
 
 		    void service_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает принятые квитанции от КТС УК
