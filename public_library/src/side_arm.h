@@ -15,6 +15,7 @@ namespace MpkPen
 	    class Provider
 	    {
 		    bool test_mode;
+		    bool listen_udp_;
 		    boost::asio::io_service io_service_;
 		    int arm_port_, service_port_;
 		    UdpServer udp_server_;

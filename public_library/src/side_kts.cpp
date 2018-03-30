@@ -59,12 +59,6 @@ void MpkPen::Public::Kts::Provider::service_callback(std::string const& _arm_ord
 	MpkPen::Public::Logger::instance() << "FAIL: recieve Tu - can`t parse Order from recieved string " << std::endl;
 	return;
     }
-    /*random ticket - for test*/
-    if ( (std::rand() % 100) > 50 )
-    {
-        //_kts_ticket = _arm_order;
-	_kts_ticket = "received";
-    }
 
     if ( MpkPen::Private::is_my_order( order.order_data( ), plan_, stations_ )  )
     {
@@ -76,6 +70,9 @@ void MpkPen::Public::Kts::Provider::service_callback(std::string const& _arm_ord
 		auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, order.order_data( ), client_manager_ );
 	    cmd->delivered( true );
 	    client_manager_.start( cmd );
+
+	    // - this   if ( (std::rand() % 100) > 50 )  is for test purpose	    
+	    _kts_ticket = "received";
 	}
 	else
 	{

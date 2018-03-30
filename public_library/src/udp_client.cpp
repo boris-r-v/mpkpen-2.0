@@ -90,7 +90,7 @@ void MpkPen::Public::UdpClient::read_ticket_from_socket()
 	if (  "received" == rec ) 
 	{
     	    done_ = true;
-            MpkPen::Public::Logger::instance() << "Ok:  Tu: " << MpkPen::Private::print_tu ( order_string_ ) << "recieved" << std::endl;
+            MpkPen::Public::Logger::instance() << "Ok:  Tu: " << MpkPen::Private::print_tu ( order_string_ ) << "delivered" << std::endl;
 	}
 	if (  "already received" == rec ) 
 	{
