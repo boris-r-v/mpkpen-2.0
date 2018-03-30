@@ -16,7 +16,7 @@ namespace MpkPen
 	    {
 		    bool test_mode;
 		    boost::asio::io_service io_service_;
-		    int arm_port_, kts_port_, service_port_;
+		    int arm_port_, service_port_;
 		    UdpServer udp_server_;
 		    UdpServer service_server_;
 		    UdpClientManager client_manager_;

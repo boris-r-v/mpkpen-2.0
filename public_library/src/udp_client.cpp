@@ -3,6 +3,7 @@
 #include <udp_client.h> 
 #include <udp_client_manager.h> 
 #include <boost/bind.hpp> 
+
 #define MAX_SEND_ATTEMPT 3
 
 MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg, UdpClientManager& _cmgr ):
@@ -11,6 +12,7 @@ MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, i
     timer_( io_service ),
     done_( false ),
     message_( msg ),
+    order_string_ ( msg ),
     attempt_ ( MAX_SEND_ATTEMPT ),
     client_manager_(_cmgr )
 {
@@ -22,9 +24,30 @@ MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, i
 
 }
 
+MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, MpkPen::Public::Order const& ord, UdpClientManager& _cmgr ):
+    endpoint_( address, port),
+    socket_( io_service, boost::asio::ip::udp::v4() ), //endpoint_.protocol() ),	
+    timer_( io_service ),
+    done_( false ),
+    order_string_ ( ord.order_data() ),
+    attempt_ ( MAX_SEND_ATTEMPT ),
+    client_manager_(_cmgr )
+{
+    if ( !ord.SerializeToString ( &message_ ) )
+    {
+        MpkPen::Public::Logger::instance() << "Fail send tu  -can`t serialize order to string." << std::endl;
+	return;
+    }	
+
+    socket_.non_blocking( true );    
+    socket_.async_send_to( boost::asio::buffer( message_ ), endpoint_, boost::bind(&UdpClient::handle_send_to, this, boost::asio::placeholders::error) );
+
+    MpkPen::Public::Logger::instance() << "...Send tu:" << MpkPen::Private::print_tu ( order_string_ ) << std::endl;
+
+}
+
 void MpkPen::Public::UdpClient::handle_send_to(const boost::system::error_code& error)
 {
-//    std::cout << "void MpkPen::Public::UdpClient::handle_send_to" << std::endl;
     if ( !error && !done_ )
     {
 	timer_.expires_from_now(boost::posix_time::seconds(1));
@@ -38,18 +61,18 @@ void MpkPen::Public::UdpClient::handle_send_to(const boost::system::error_code& 
 
 void MpkPen::Public::UdpClient::handle_timeout(const boost::system::error_code& error)
 {
-//    std::cout << "void MpkPen::Public::UdpClient::handle_timeout" << std::endl;
     read_ticket_from_socket();
     if ( !error && !done_ && --attempt_ )
     {	
 	socket_.async_send_to( boost::asio::buffer(message_), endpoint_, boost::bind(&UdpClient::handle_send_to, this, boost::asio::placeholders::error));
-        MpkPen::Public::Logger::instance() << "...Send duplicate tu:" << MpkPen::Private::print_tu ( message_ ) << std::endl;
+        MpkPen::Public::Logger::instance() << "...Send duplicate tu:" << MpkPen::Private::print_tu ( order_string_ ) << std::endl;
     }
     else
     {
 	if ( !attempt_ )
-	    MpkPen::Public::Logger::instance() << "FAIL: Tu "<< MpkPen::Private::print_tu ( message_ ) << " not recieved, tries is gone " << std::endl;
-	//FIX ME - разбить на разные сообщения в лог
+	    MpkPen::Public::Logger::instance() << "FAIL: Tu "<< MpkPen::Private::print_tu ( order_string_ ) << " not recieved, tries is gone " << std::endl;
+	if ( error )
+	    MpkPen::Public::Logger::instance() << "FAIL: Tu "<< MpkPen::Private::print_tu ( order_string_ ) << " not recieved, error "<< error << " occur " << std::endl;
 	client_manager_.stop(shared_from_this());
     }
 }
@@ -63,10 +86,16 @@ void MpkPen::Public::UdpClient::read_ticket_from_socket()
     {
         std::string rec;
         std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
-        if ( rec == message_ ) 
+        //if ( rec == message_ ) 
+	if (  "received" == rec ) 
 	{
     	    done_ = true;
-            MpkPen::Public::Logger::instance() << "Ok:  Tu: " << MpkPen::Private::print_tu ( message_ ) << "recieved" << std::endl;
+            MpkPen::Public::Logger::instance() << "Ok:  Tu: " << MpkPen::Private::print_tu ( order_string_ ) << "recieved" << std::endl;
+	}
+	if (  "already received" == rec ) 
+	{
+    	    done_ = true;
+            MpkPen::Public::Logger::instance() << "Warning: ticket for tu: " << MpkPen::Private::print_tu ( order_string_ ) << " will be lost" << std::endl;
 	}
     }
 }
