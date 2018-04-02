@@ -1,8 +1,8 @@
 project(mpkpen)
-cmake_minimum_required(VERSION 2.6)
-
+cmake_minimum_required(VERSION 3.5)
 # set compile time options 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g -static-libgcc -static-libstdc++ -static")
+
 
 # set current version of project
 set(VERSION_MAJOR 0)
@@ -25,19 +25,23 @@ include_directories(${PROJECT_BINARY_DIR})
 set(RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen.cpp)
 
 # add private library
-add_subdirectory(private_library)
+#add_subdirectory(private_library)
 
 # add public library
 add_subdirectory(public_library)
-set(EXTRA_LIBS ${EXTRA_LIBS} shared_public)
+
+# add private library
+add_subdirectory(private_library)
 
 # add include dir for the exutables
 include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
-include_directories ("${PROJECT_SOURCE_DIR}/private_library/src")
 
 # add target
-add_executable(${PROJECT_NAME} ${RUNNER_SRC})
-target_link_libraries(${PROJECT_NAME} ${EXTRA_LIBS} )
+set( STATIC_RUNNER ${PROJECT_NAME} )
+add_executable(${STATIC_RUNNER} ${RUNNER_SRC})
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+target_link_libraries(${STATIC_RUNNER} static_public )
 
 
 
