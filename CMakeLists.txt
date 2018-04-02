@@ -1,8 +1,15 @@
 project(mpkpen)
 cmake_minimum_required(VERSION 3.5)
-# set compile time options 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g -static-libgcc -static-libstdc++ -static")
 
+option(BUILD_STATIC "Build the static runner" ON)
+message(${CMAKE_SYSTEM_PROCESSOR})
+# set compile time options 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g ")
+
+
+if(BUILD_STATIC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -static-libgcc -static-libstdc++")
+endif(BUILD_STATIC)
 
 # set current version of project
 set(VERSION_MAJOR 0)
@@ -25,23 +32,24 @@ include_directories(${PROJECT_BINARY_DIR})
 set(RUNNER_SRC ${PROJECT_SOURCE_DIR}/run_src/mpkpen.cpp)
 
 # add private library
-#add_subdirectory(private_library)
+add_subdirectory(private_library)
 
 # add public library
 add_subdirectory(public_library)
-
-# add private library
-add_subdirectory(private_library)
 
 # add include dir for the exutables
 include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
 
 # add target
-set( STATIC_RUNNER ${PROJECT_NAME} )
-add_executable(${STATIC_RUNNER} ${RUNNER_SRC})
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-target_link_libraries(${STATIC_RUNNER} static_public )
+add_executable(${PROJECT_NAME} ${RUNNER_SRC})
 
+# choose linkage
+if(BUILD_STATIC)
+    
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ")
+    target_link_libraries(${PROJECT_NAME} static_public )
 
+else(BUILD_STATIC)
+    target_link_libraries(${PROJECT_NAME} shared_public )
+endif(BUILD_STATIC)
 

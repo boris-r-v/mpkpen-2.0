@@ -1,9 +1,15 @@
 
-set (Boost_USE_STATIC_LIBS ON) 
-set (Protobuf_USE_STATIC_LIBS ON)
+if(BUILD_STATIC)
+    set (BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu" )
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set (Boost_USE_STATIC_LIBS ON) 
+    set (Boost_USE_MULTITHREADED OFF)
+    set (Boost_USE_STATIC_RUNTIME ON)
+    set (Protobuf_USE_STATIC_LIBS ON)
+endif(BUILD_STATIC)
 
 # need library
-find_package(Boost REQUIRED COMPONENTS program_options system)
+find_package(Boost COMPONENTS program_options system REQUIRED )
 find_package(Protobuf REQUIRED)
 
 # add lib source files
@@ -25,18 +31,29 @@ PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${ProtobufProtoSources} )
 include_directories ("${PROJECT_SOURCE_DIR}/private_library/src")
 
 # add static open-library
-add_library(static_public STATIC ${PUBLIC_LIB_SOURSEC} ${PROTO_SRCS} ${PROTO_HDRS} )
-set_target_properties(static_public PROPERTIES LINK_FLAGS "-static" )
-
-target_link_libraries(static_public static_private ${Boost_LIBRARIES} ${PROTOBUF_LIBRARIES} )
-
+if(BUILD_STATIC)
+#add lib
+    add_library(static_public STATIC ${PUBLIC_LIB_SOURSEC} ${PROTO_SRCS} ${PROTO_HDRS} )
+#link 
+    target_link_libraries(static_public static_private ${PROTOBUF_LIBRARIES} /usr/lib/x86_64-linux-gnu/libboost_program_options.a /usr/lib/x86_64-linux-gnu/libboost_system.a  /usr/lib/x86_64-linux-gnu/libpthread.a )
+#/usr/lib/x86_64-linux-gnu/libprotobuf.a  /usr/lib/x86_64-linux-gnu/libc.a
 # set property    
-set_target_properties(static_public PROPERTIES
+    set_target_properties(static_public PROPERTIES
 			OUTPUT_NAME			${PROJECT_NAME}_public-${RELEASE_SERIES}
 			VERSION				${VERSION}
 			PUBLIC_HEADER			"${PUBLIC_LIB_HEADER}"
 		    )
-
-
+else(BUILD_STATIC)
+#add lib
+    add_library(shared_public SHARED ${PUBLIC_LIB_SOURSEC} ${PROTO_SRCS} ${PROTO_HDRS} )
+#link 
+    target_link_libraries(shared_public shared_private ${Boost_LIBRARIES} ${PROTOBUF_LIBRARIES} )
+# set property    
+    set_target_properties(shared_public PROPERTIES
+    			OUTPUT_NAME			${PROJECT_NAME}_public-${RELEASE_SERIES}
+			VERSION				${VERSION}
+			PUBLIC_HEADER			"${PUBLIC_LIB_HEADER}"
+		    )
+endif(BUILD_STATIC)
 
 
