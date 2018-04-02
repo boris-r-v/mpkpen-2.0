@@ -42,14 +42,5 @@ include_directories ("${PROJECT_SOURCE_DIR}/public_library/src")
 
 # add target
 add_executable(${PROJECT_NAME} ${RUNNER_SRC})
-
-# choose linkage
-if(BUILD_STATIC)
-    
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ")
-    target_link_libraries(${PROJECT_NAME} static_public )
-
-else(BUILD_STATIC)
-    target_link_libraries(${PROJECT_NAME} shared_public )
-endif(BUILD_STATIC)
+target_link_libraries(${PROJECT_NAME} public )
 
