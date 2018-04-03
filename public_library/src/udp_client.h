@@ -14,7 +14,7 @@ namespace MpkPen
 	{
 	    public:
 		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, std::string const& msg, UdpClientManager& );	
-		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, MpkPen::Public::Order const& ord, UdpClientManager& );	
+		UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, MpkPen::Public::Order const& ord, UdpClientManager&, unsigned );	
 		virtual ~UdpClient( ) = default;
 
 		bool delivered() const;

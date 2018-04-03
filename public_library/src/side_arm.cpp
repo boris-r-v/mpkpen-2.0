@@ -5,6 +5,7 @@
 #include <boost/bind.hpp>
 #include <ctime>
 
+#define MAX_SEND_ATTEMPT 3
 #define SERVICE_GROUP "224.12.12.12"
 #define SERVICE_PORT 18681
 #define SERVICE_TEST_ARM_PORT 18681
@@ -17,7 +18,8 @@ MpkPen::Public::Arm::Provider::Provider( boost::program_options::variables_map c
     arm_port_( _vm.count("arm_udp_port") ? _vm["arm_udp_port"].as<int>() : ( _vm.count("arm_mcast_port") ? _vm["arm_mcast_port"].as<int>() : TRASH_ARM_PORT ) ), 
     service_port_( _vm.count("service_port") ? _vm["service_port"].as<int>() : SERVICE_PORT ),
     udp_server_( arm_port_, [this](std::string const& _s1, std::string& _s2){ this->udp_callback( _s1, _s2 ); }, io_service_ ),
-    service_server_( service_port_, [this](std::string const& _s1, std::string& _s2){ this->service_callback( _s1, _s2 ); }, io_service_ )
+    service_server_( service_port_, [this](std::string const& _s1, std::string& _s2){ this->service_callback( _s1, _s2 ); }, io_service_ ),
+    attempts_( _vm.count("arm_send_attempts") ? _vm["arm_send_attempts"].as<int>() : MAX_SEND_ATTEMPT )
 {
     if ( _vm.count("arm_udp_port") )
     {
@@ -62,7 +64,7 @@ void MpkPen::Public::Arm::Provider::udp_callback(std::string const& _arm_tu, std
     {	//Для команд приходящих уже в мультикасте - готовые к потреблению контроолером
 	order.set_order_data( _arm_tu );
     }
-    client_manager_.start( std::make_shared<UdpClient>( boost::asio::ip::address::from_string( SERVICE_GROUP ), (test_mode ? SERVICE_TEST_KTS_PORT : service_port_ ), io_service_, order, client_manager_ ) );
+    client_manager_.start( std::make_shared<UdpClient>( boost::asio::ip::address::from_string( SERVICE_GROUP ), (test_mode ? SERVICE_TEST_KTS_PORT : service_port_ ), io_service_, order, client_manager_, attempts_ ) );
 }
 
 void MpkPen::Public::Arm::Provider::service_callback(std::string const& _data_from_kts, std::string& _empty )

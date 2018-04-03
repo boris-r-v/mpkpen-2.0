@@ -21,6 +21,7 @@ namespace MpkPen
 		    UdpServer udp_server_;
 		    UdpServer service_server_;
 		    UdpClientManager client_manager_;
+		    unsigned attempts_;
 
 		    void udp_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает команду ТУ для отправки по сервисному протоколу
 		    void service_callback(std::string const& _s1, std::string& _s2);	//Обрабатывает принятые квитанции от КТС УК

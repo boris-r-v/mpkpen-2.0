@@ -67,7 +67,7 @@ void MpkPen::Public::Kts::Provider::service_callback(std::string const& _arm_ord
 	{
 	    orders_.push_back( order );
 	    MpkPen::Public::Logger::instance() << "OK: recieve Tu: " << MpkPen::Private::print_tu ( order.order_data( ) ) << std::endl;
-		auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, order.order_data( ), client_manager_ );
+	    auto cmd = std::make_shared<UdpClient>( boost::asio::ip::address::from_string( mcast_group_ ), kts_port_, io_service_, order.order_data( ), client_manager_ );
 	    cmd->delivered( true );
 	    client_manager_.start( cmd );
 

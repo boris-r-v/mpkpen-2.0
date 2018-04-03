@@ -24,13 +24,13 @@ MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, i
 
 }
 
-MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, MpkPen::Public::Order const& ord, UdpClientManager& _cmgr ):
+MpkPen::Public::UdpClient::UdpClient( boost::asio::ip::address const& address, int port, boost::asio::io_service& io_service, MpkPen::Public::Order const& ord, UdpClientManager& _cmgr,  unsigned _atm ):
     endpoint_( address, port),
     socket_( io_service, boost::asio::ip::udp::v4() ), //endpoint_.protocol() ),	
     timer_( io_service ),
     done_( false ),
     order_string_ ( ord.order_data() ),
-    attempt_ ( MAX_SEND_ATTEMPT ),
+    attempt_ ( _atm > MAX_SEND_ATTEMPT ? _atm : MAX_SEND_ATTEMPT ),
     client_manager_(_cmgr )
 {
     if ( !ord.SerializeToString ( &message_ ) )
@@ -86,7 +86,6 @@ void MpkPen::Public::UdpClient::read_ticket_from_socket()
     {
         std::string rec;
         std::copy (rec_buffer_.begin(), rec_buffer_.begin()+size, std::back_inserter( rec ) );
-        //if ( rec == message_ ) 
 	if (  "received" == rec ) 
 	{
     	    done_ = true;
@@ -119,3 +118,5 @@ bool MpkPen::Public::UdpClient::timeout() const
 {
     return !attempt_;
 }
+
+
