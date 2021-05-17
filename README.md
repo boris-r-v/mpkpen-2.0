@@ -1,3 +1,5 @@
+[![CMake](https://github.com/boris-r-v/mpkpen-2.0/actions/workflows/cmake.yml/badge.svg)](https://github.com/boris-r-v/mpkpen-2.0/actions/workflows/cmake.yml)
+
 mpkpen-2.0
 =====
 
